@@ -93,9 +93,18 @@ namespace Barbershop
                 string id = dataGridView1.CurrentRow.Cells["id_reservasi"].Value.ToString();
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
+                    conn.Open();
+                    string sql = "UPDATE Reservasi SET status_reservasi = 'Selesai', status_pembayaran = 'Lunas' WHERE id_reservasi = @id";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("Status Reservasi Diperbarui!");
+                    RefreshTable();
                 }
             }
         }
+
+
 
     }
 }
