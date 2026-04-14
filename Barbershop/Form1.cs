@@ -20,6 +20,12 @@ namespace Barbershop
             LoadComboBoxes();
         }
 
+        private void RefreshTable()
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                
+         }
 
     }
 }
