@@ -24,8 +24,19 @@ namespace Barbershop
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                
-         }
+                string query = @"SELECT R.id_reservasi, R.nama_pelanggan, L.nama_layanan, 
+                                 C.nama AS Capster, J.hari, R.status_reservasi 
+                                 FROM Reservasi R
+                                 JOIN Layanan L ON R.id_layanan = L.id_layanan
+                                 JOIN Capster C ON R.id_capster = C.id_capster
+                                 JOIN Jadwal J ON R.id_jadwal = J.id_jadwal";
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dataGridView1.DataSource = dt;
+            }
+        }
+
 
     }
 }
