@@ -86,6 +86,16 @@ namespace Barbershop
             }
         }
 
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null)
+            {
+                string id = dataGridView1.CurrentRow.Cells["id_reservasi"].Value.ToString();
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                }
+            }
+        }
 
     }
 }
