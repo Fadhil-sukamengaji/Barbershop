@@ -111,6 +111,15 @@ namespace Barbershop
                 string id = dataGridView1.CurrentRow.Cells["id_reservasi"].Value.ToString();
                 if (MessageBox.Show("Hapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        conn.Open();
+                        string sql = "DELETE FROM Reservasi WHERE id_reservasi = @id";
+                        SqlCommand cmd = new SqlCommand(sql, conn);
+                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.ExecuteNonQuery();
+                        RefreshTable();
+                    }
                 }
             }
         }
