@@ -132,7 +132,29 @@ namespace Barbershop
 
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                }
+                    try
+                    {
+                        conn.Open();
+                        string sql = @"UPDATE Reservasi 
+                               SET nama_pelanggan = @nama, 
+                                   id_layanan = @lay, 
+                                   id_capster = @cap, 
+                                   id_jadwal = @jad 
+                               WHERE id_reservasi = @id";
+
+                        SqlCommand cmd = new SqlCommand(sql, conn);
+                        cmd.Parameters.AddWithValue("@nama", textBoxNama.Text);
+                        cmd.Parameters.AddWithValue("@lay", comboBoxLayanan.SelectedValue);
+                        cmd.Parameters.AddWithValue("@cap", comboBoxCapster.SelectedValue);
+                        cmd.Parameters.AddWithValue("@jad", comboBoxJadwal.SelectedValue);
+                        cmd.Parameters.AddWithValue("@id", idReservasi);
+
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Data reservasi berhasil diubah!");
+                        RefreshTable();
+                    }
+                    }
+            
             }
         }
 
