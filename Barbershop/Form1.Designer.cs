@@ -40,6 +40,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.btnGanti = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -57,7 +58,6 @@
             this.textBoxNama.Name = "textBoxNama";
             this.textBoxNama.Size = new System.Drawing.Size(138, 22);
             this.textBoxNama.TabIndex = 1;
-            this.textBoxNama.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // btnInsert
             // 
@@ -65,9 +65,9 @@
             this.btnInsert.Name = "btnInsert";
             this.btnInsert.Size = new System.Drawing.Size(75, 23);
             this.btnInsert.TabIndex = 2;
-            this.btnInsert.Text = "Insert";
+            this.btnInsert.Text = "Tambah";
             this.btnInsert.UseVisualStyleBackColor = true;
-            this.btnInsert.Click += new System.EventHandler(this.button1_Click);
+            this.btnInsert.Click += new System.EventHandler(this.btnInsert_Click);
             // 
             // dataGridView1
             // 
@@ -76,17 +76,19 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(776, 180);
+            this.dataGridView1.Size = new System.Drawing.Size(898, 180);
             this.dataGridView1.TabIndex = 3;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(589, 88);
+            this.btnUpdate.Location = new System.Drawing.Point(728, 91);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(75, 23);
             this.btnUpdate.TabIndex = 4;
-            this.btnUpdate.Text = "Update";
+            this.btnUpdate.Text = "Selesai";
             this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // btnDelete
             // 
@@ -94,8 +96,9 @@
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(75, 23);
             this.btnDelete.TabIndex = 5;
-            this.btnDelete.Text = "Delete";
+            this.btnDelete.Text = "Hapus";
             this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // comboBoxCapster
             // 
@@ -121,7 +124,6 @@
             this.label1.Size = new System.Drawing.Size(59, 16);
             this.label1.TabIndex = 8;
             this.label1.Text = "Layanan";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
@@ -149,13 +151,23 @@
             this.label4.Size = new System.Drawing.Size(113, 16);
             this.label4.TabIndex = 11;
             this.label4.Text = "Nama Pelanggan";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
+            // 
+            // btnGanti
+            // 
+            this.btnGanti.Location = new System.Drawing.Point(589, 91);
+            this.btnGanti.Name = "btnGanti";
+            this.btnGanti.Size = new System.Drawing.Size(75, 23);
+            this.btnGanti.TabIndex = 12;
+            this.btnGanti.Text = "Ganti";
+            this.btnGanti.UseVisualStyleBackColor = true;
+            this.btnGanti.Click += new System.EventHandler(this.btnGanti_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(922, 450);
+            this.Controls.Add(this.btnGanti);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -191,6 +203,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnGanti;
     }
 }
 
