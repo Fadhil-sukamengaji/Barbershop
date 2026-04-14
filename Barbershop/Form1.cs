@@ -69,6 +69,51 @@ namespace Barbershop
             }
         }
 
+        private void btnInsert_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string sql = "INSERT INTO Reservasi (nama_pelanggan, id_layanan, id_capster, id_jadwal) VALUES (@nama, @lay, @cap, @jad)";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@nama", textBoxNama.Text);
+                cmd.Parameters.AddWithValue("@lay", comboBoxLayanan.SelectedValue);
+                cmd.Parameters.AddWithValue("@cap", comboBoxCapster.SelectedValue);
+                cmd.Parameters.AddWithValue("@jad", comboBoxJadwal.SelectedValue);
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Data Berhasil Disimpan!");
+                RefreshTable();
+            }
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null)
+            {
+                string id = dataGridView1.CurrentRow.Cells["id_reservasi"].Value.ToString();
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string sql = "UPDATE Reservasi SET status_reservasi = 'Selesai', status_pembayaran = 'Lunas' WHERE id_reservasi = @id";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("Status Reservasi Diperbarui!");
+                    RefreshTable();
+                }
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentRow != null)
+            {
+                string id = dataGridView1.CurrentRow.Cells["id_reservasi"].Value.ToString();
+                if (MessageBox.Show("Hapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                }
+            }
+        }
 
     }
 }
