@@ -46,8 +46,14 @@ namespace Barbershop
                 string queryLayanan = "SELECT id_layanan, " +
                                       "nama_layanan + ' - Rp. ' + CAST(CAST(harga AS DECIMAL(10,0)) AS VARCHAR) AS LayananHarga " +
                                       "FROM Layanan";
+
+                SqlDataAdapter daL = new SqlDataAdapter(queryLayanan, conn);
+                DataTable dtL = new DataTable();
+                daL.Fill(dtL);
+
             }
         }
+
 
     }
 }
