@@ -61,10 +61,13 @@ namespace Barbershop
                 comboBoxCapster.DisplayMember = "nama";
                 comboBoxCapster.ValueMember = "id_capster";
 
+                SqlDataAdapter daJ = new SqlDataAdapter("SELECT id_jadwal, hari FROM Jadwal WHERE status_jadwal = 'Tersedia'", conn);
+                DataTable dtJ = new DataTable(); daJ.Fill(dtJ);
+                comboBoxJadwal.DataSource = dtJ;
+                comboBoxJadwal.DisplayMember = "hari";
+                comboBoxJadwal.ValueMember = "id_jadwal";
             }
         }
-
-
 
 
     }
