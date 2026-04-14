@@ -153,10 +153,19 @@ namespace Barbershop
                         MessageBox.Show("Data reservasi berhasil diubah!");
                         RefreshTable();
                     }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Gagal mengubah data: " + ex.Message);
                     }
-            
+                }
+            }
+            else
+            {
+                MessageBox.Show("Pilih baris di tabel yang ingin diganti!");
             }
         }
+
+       
 
     }
 }
