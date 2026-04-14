@@ -9,7 +9,17 @@ namespace Barbershop
     {
  
         string connectionString = @"Data Source=PADILSU\PADIL;Initial Catalog=DBBarbershop;Integrated Security=True";
+        public Form1()
+        {
+            InitializeComponent();
+        }
 
-       
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            RefreshTable();
+            LoadComboBoxes();
+        }
+
+
     }
 }
