@@ -51,8 +51,13 @@ namespace Barbershop
                 DataTable dtL = new DataTable();
                 daL.Fill(dtL);
 
+                comboBoxLayanan.DataSource = dtL;
+                comboBoxLayanan.DisplayMember = "LayananHarga";
+                comboBoxLayanan.ValueMember = "id_layanan";
+
             }
         }
+
 
 
     }
