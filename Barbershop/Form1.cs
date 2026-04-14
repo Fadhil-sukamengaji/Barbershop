@@ -37,6 +37,12 @@ namespace Barbershop
             }
         }
 
+        private void LoadComboBoxes()
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+            }   
+        }
 
     }
 }
