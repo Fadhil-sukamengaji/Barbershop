@@ -86,34 +86,6 @@ namespace Barbershop
             }
         }
 
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.CurrentRow != null)
-            {
-                string id = dataGridView1.CurrentRow.Cells["id_reservasi"].Value.ToString();
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    string sql = "UPDATE Reservasi SET status_reservasi = 'Selesai', status_pembayaran = 'Lunas' WHERE id_reservasi = @id";
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@id", id);
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Status Reservasi Diperbarui!");
-                    RefreshTable();
-                }
-            }
-        }
-
-        private void btnDelete_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.CurrentRow != null)
-            {
-                string id = dataGridView1.CurrentRow.Cells["id_reservasi"].Value.ToString();
-                if (MessageBox.Show("Hapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                }
-            }
-        }
 
     }
 }
