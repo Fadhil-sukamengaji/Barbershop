@@ -55,8 +55,15 @@ namespace Barbershop
                 comboBoxLayanan.DisplayMember = "LayananHarga";
                 comboBoxLayanan.ValueMember = "id_layanan";
 
+                SqlDataAdapter daC = new SqlDataAdapter("SELECT id_capster, nama FROM Capster", conn);
+                DataTable dtC = new DataTable(); daC.Fill(dtC);
+                comboBoxCapster.DataSource = dtC;
+                comboBoxCapster.DisplayMember = "nama";
+                comboBoxCapster.ValueMember = "id_capster";
+
             }
         }
+
 
 
 
