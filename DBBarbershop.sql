@@ -1,3 +1,5 @@
+
+
 CREATE DATABASE DBBarbershop;
 GO
 

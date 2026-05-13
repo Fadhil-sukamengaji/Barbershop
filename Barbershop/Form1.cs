@@ -7,7 +7,12 @@ namespace Barbershop
 {
     public partial class Form1 : Form
     {
- 
+
+        DataSet ds = new DataSet();
+        SqlDataAdapter da;
+        BindingSource bs = new BindingSource();
+        SqlCommandBuilder cb;
+
         string connectionString = @"Data Source=PADILSU\PADIL;Initial Catalog=DBBarbershop;Integrated Security=True";
         public Form1()
         {
@@ -18,22 +23,27 @@ namespace Barbershop
         {
             RefreshTable();
             LoadComboBoxes();
+
+            textBoxNama.DataBindings.Clear();
+            textBoxNama.DataBindings.Add("Text", bs, "nama_pelanggan", true, DataSourceUpdateMode.OnPropertyChanged);
+
+            if (bindingNavigator1 != null)
+            {
+                bindingNavigator1.BindingSource = bs;
+            }
         }
 
         private void RefreshTable()
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = @"SELECT R.id_reservasi, R.nama_pelanggan, L.nama_layanan, 
-                                 C.nama AS Capster, J.hari, R.status_reservasi 
-                                 FROM Reservasi R
-                                 JOIN Layanan L ON R.id_layanan = L.id_layanan
-                                 JOIN Capster C ON R.id_capster = C.id_capster
-                                 JOIN Jadwal J ON R.id_jadwal = J.id_jadwal";
-                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                string query = "SELECT * FROM vw_Reservasi";
+                da = new SqlDataAdapter(query, conn);
+                cb = new SqlCommandBuilder(da);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
-                dataGridView1.DataSource = dt;
+                bs.DataSource = dt;
+                dataGridView1.DataSource = bs;
             }
         }
 
@@ -73,16 +83,30 @@ namespace Barbershop
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                conn.Open();
-                string sql = "INSERT INTO Reservasi (nama_pelanggan, id_layanan, id_capster, id_jadwal) VALUES (@nama, @lay, @cap, @jad)";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@nama", textBoxNama.Text);
-                cmd.Parameters.AddWithValue("@lay", comboBoxLayanan.SelectedValue);
-                cmd.Parameters.AddWithValue("@cap", comboBoxCapster.SelectedValue);
-                cmd.Parameters.AddWithValue("@jad", comboBoxJadwal.SelectedValue);
-                cmd.ExecuteNonQuery();
-                MessageBox.Show("Data Berhasil Disimpan!");
-                RefreshTable();
+                try
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand("sp_InsertReservasi", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@nama_pelanggan", textBoxNama.Text);
+                    cmd.Parameters.AddWithValue("@id_layanan", comboBoxLayanan.SelectedValue);
+                    cmd.Parameters.AddWithValue("@id_capster", comboBoxCapster.SelectedValue);
+                    cmd.Parameters.AddWithValue("@id_jadwal", comboBoxJadwal.SelectedValue);
+                    cmd.Parameters.AddWithValue("@status_reservasi", "Pending");
+                    cmd.Parameters.AddWithValue("@status_pembayaran", "Belum Bayar");
+
+                    cmd.ExecuteNonQuery();
+
+                    MessageBox.Show("Data Berhasil Disimpan!");
+
+                    RefreshTable();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 
@@ -91,13 +115,20 @@ namespace Barbershop
             if (dataGridView1.CurrentRow != null)
             {
                 string id = dataGridView1.CurrentRow.Cells["id_reservasi"].Value.ToString();
+
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string sql = "UPDATE Reservasi SET status_reservasi = 'Selesai', status_pembayaran = 'Lunas' WHERE id_reservasi = @id";
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@id", id);
+
+                    SqlCommand cmd = new SqlCommand("sp_UpdateReservasi", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@id_reservasi", id);
+                    cmd.Parameters.AddWithValue("@status_reservasi", "Selesai");
+                    cmd.Parameters.AddWithValue("@status_pembayaran", "Lunas");
+
                     cmd.ExecuteNonQuery();
+
                     MessageBox.Show("Status Reservasi Diperbarui!");
                     RefreshTable();
                 }
@@ -109,15 +140,20 @@ namespace Barbershop
             if (dataGridView1.CurrentRow != null)
             {
                 string id = dataGridView1.CurrentRow.Cells["id_reservasi"].Value.ToString();
+
                 if (MessageBox.Show("Hapus data ini?", "Konfirmasi", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     using (SqlConnection conn = new SqlConnection(connectionString))
                     {
                         conn.Open();
-                        string sql = "DELETE FROM Reservasi WHERE id_reservasi = @id";
-                        SqlCommand cmd = new SqlCommand(sql, conn);
-                        cmd.Parameters.AddWithValue("@id", id);
+
+                        SqlCommand cmd = new SqlCommand("sp_DeleteReservasi", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@id_reservasi", id);
+
                         cmd.ExecuteNonQuery();
+
                         RefreshTable();
                     }
                 }
@@ -135,21 +171,18 @@ namespace Barbershop
                     try
                     {
                         conn.Open();
-                        string sql = @"UPDATE Reservasi 
-                               SET nama_pelanggan = @nama, 
-                                   id_layanan = @lay, 
-                                   id_capster = @cap, 
-                                   id_jadwal = @jad 
-                               WHERE id_reservasi = @id";
 
-                        SqlCommand cmd = new SqlCommand(sql, conn);
-                        cmd.Parameters.AddWithValue("@nama", textBoxNama.Text);
-                        cmd.Parameters.AddWithValue("@lay", comboBoxLayanan.SelectedValue);
-                        cmd.Parameters.AddWithValue("@cap", comboBoxCapster.SelectedValue);
-                        cmd.Parameters.AddWithValue("@jad", comboBoxJadwal.SelectedValue);
-                        cmd.Parameters.AddWithValue("@id", idReservasi);
+                        SqlCommand cmd = new SqlCommand("sp_GantiReservasi", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@nama_pelanggan", textBoxNama.Text);
+                        cmd.Parameters.AddWithValue("@id_layanan", comboBoxLayanan.SelectedValue);
+                        cmd.Parameters.AddWithValue("@id_capster", comboBoxCapster.SelectedValue);
+                        cmd.Parameters.AddWithValue("@id_jadwal", comboBoxJadwal.SelectedValue);
+                        cmd.Parameters.AddWithValue("@id_reservasi", idReservasi);
 
                         cmd.ExecuteNonQuery();
+
                         MessageBox.Show("Data reservasi berhasil diubah!");
                         RefreshTable();
                     }
@@ -165,10 +198,60 @@ namespace Barbershop
             }
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void btnTestInjection_Click(object sender, EventArgs e)
         {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "UPDATE Reservasi SET nama_pelanggan = 'HACKED' WHERE nama_pelanggan = '" + textBoxNama.Text + "'";
 
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        int result = cmd.ExecuteNonQuery();
+                        MessageBox.Show(result + " baris berhasil dilakukan SQL Injection!");
+                    }
+                }
+                RefreshTable();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
 
+        private void btnResetData_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = @"
+                IF OBJECT_ID('dbo.Reservasi_Backup') IS NOT NULL
+                BEGIN
+                    DELETE FROM dbo.Reservasi;
+                    SET IDENTITY_INSERT dbo.Reservasi ON;
+                    INSERT INTO dbo.Reservasi (id_reservasi, id_layanan, id_capster, id_jadwal, status_reservasi, status_pembayaran, nama_pelanggan)
+                    SELECT id_reservasi, id_layanan, id_capster, id_jadwal, status_reservasi, status_pembayaran, nama_pelanggan 
+                    FROM dbo.Reservasi_Backup;
+
+                    SET IDENTITY_INSERT dbo.Reservasi OFF;
+                END";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                MessageBox.Show("Data berhasil direset!");
+                RefreshTable();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Reset gagal: " + ex.Message);
+            }
+        }
     }
 }
