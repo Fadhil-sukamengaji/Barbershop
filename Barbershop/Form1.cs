@@ -37,6 +37,7 @@ namespace Barbershop
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+<<<<<<< HEAD
                 string query = "SELECT * FROM vw_Reservasi";
                 da = new SqlDataAdapter(query, conn);
                 cb = new SqlCommandBuilder(da);
@@ -44,6 +45,17 @@ namespace Barbershop
                 da.Fill(dt);
                 bs.DataSource = dt;
                 dataGridView1.DataSource = bs;
+=======
+                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM v_DaftarReservasi", conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                BindingSource bs = new BindingSource();
+                bs.DataSource = dt;
+                dataGridView1.DataSource = bs;
+
+                bindingNavigator1.BindingSource = bs;
+>>>>>>> e29a21ff04056e53f0e95fd8ee0fdd891f522986
             }
         }
 
@@ -83,6 +95,7 @@ namespace Barbershop
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
+<<<<<<< HEAD
                 try
                 {
                     conn.Open();
@@ -107,6 +120,27 @@ namespace Barbershop
                 {
                     MessageBox.Show(ex.Message, "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+=======
+                SqlCommand cmd = new SqlCommand("sp_TambahReservasi", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@nama", textBoxNama.Text);
+                cmd.Parameters.AddWithValue("@id_lay", comboBoxLayanan.SelectedValue);
+                cmd.Parameters.AddWithValue("@id_cap", comboBoxCapster.SelectedValue);
+                cmd.Parameters.AddWithValue("@id_jad", comboBoxJadwal.SelectedValue);
+
+                conn.Open();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("Berhasil!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message); // Akan memunculkan error "Jadwal penuh" dari SQL
+                }
+                RefreshTable();
+>>>>>>> e29a21ff04056e53f0e95fd8ee0fdd891f522986
             }
         }
 
@@ -198,7 +232,23 @@ namespace Barbershop
             }
         }
 
+<<<<<<< HEAD
         private void btnTestInjection_Click(object sender, EventArgs e)
+=======
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = "SELECT * FROM Reservasi WHERE nama_pelanggan = '" + txtSearch.Text + "'";
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dataGridView1.DataSource = dt;
+            }
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+>>>>>>> e29a21ff04056e53f0e95fd8ee0fdd891f522986
         {
             try
             {
